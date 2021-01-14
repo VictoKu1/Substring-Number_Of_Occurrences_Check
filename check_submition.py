@@ -1,4 +1,6 @@
-import glob, os , sys
+import glob
+import os
+import sys
 import shutil
 import subprocess
 import re
@@ -8,7 +10,7 @@ import filecmp
 def pars_input():
     submission_file = sys.argv[1]
     print(submission_file)
-    f= open(submission_file,"r")
+    f = open(submission_file, "r")
     for line in f.readlines():
         if re.search(r'\.git', line):
             git_rep = line
@@ -20,26 +22,27 @@ def pars_input():
         if re.search(r'.+', line):
             commit = line
             continue
-    return git_rep , ids , commit
+    return git_rep, ids, commit
+
 
 def main():
-    git_rep , ids,  commit = pars_input()
-    print ("your git repository is: " + git_rep)
-    print ("your ids are: " + ids)
-    print ("your commit is: " + commit)
-
+    git_rep, ids,  commit = pars_input()
+    print("your git repository is: " + git_rep)
+    print("your ids are: " + ids)
+    print("your commit is: " + commit)
 
     try:
         print("cloning your git: " + git_rep)
-        proc = subprocess.Popen("git clone " + git_rep, shell=True, stdout=subprocess.PIPE , stderr=subprocess.PIPE)
+        proc = subprocess.Popen(
+            "git clone " + git_rep, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         proc.wait()
         if proc.returncode != 0:
-           raise Exception("clone failed p.returncode= " + str(proc.returncode))
+            raise Exception("clone failed p.returncode= " +
+                            str(proc.returncode))
     except Exception as inst:
         print("can't clone your git.")
         print(inst)
         exit(1)
-
 
     try:
         match = re.search(r'([\w-]+)\.git', git_rep)
@@ -53,10 +56,12 @@ def main():
 
     try:
         print("checking out you commit: " + commit)
-        proc = subprocess.Popen("git checkout " + commit, shell=True, stdout=subprocess.PIPE , stderr=subprocess.PIPE)
+        proc = subprocess.Popen("git checkout " + commit, shell=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         proc.wait()
         if proc.returncode != 0:
-           raise Exception("checkout failed p.returncode= " + str(proc.returncode))
+            raise Exception("checkout failed p.returncode= " +
+                            str(proc.returncode))
     except Exception as inst:
         print("can't cherckout your commit.")
         print(inst)
@@ -64,33 +69,38 @@ def main():
 
     try:
         print("compiling with make all")
-        proc = subprocess.Popen("make all", shell=True, stdout=subprocess.PIPE , stderr=subprocess.PIPE)
+        proc = subprocess.Popen("make all", shell=True,
+                                stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         proc.wait()
         if proc.returncode != 0:
-           raise Exception("compilation failed p.returncode= " + str(proc.returncode))
+            raise Exception(
+                "compilation failed p.returncode= " + str(proc.returncode))
     except Exception as inst:
         print("can't compile.")
         print(inst)
         exit(1)
 
-
     try:
-        print("running: ./frequency < ../input.txt > ../frequency_output.txt" )
-        proc = subprocess.Popen("./frequency < ../input.txt > ../frequency_output.txt", shell=True)
+        print("running: ./frequency < ../input.txt > ../frequency_output.txt")
+        proc = subprocess.Popen(
+            "./frequency < ../input.txt > ../frequency_output.txt", shell=True)
         proc.wait()
         if proc.returncode != 0:
-           raise Exception("frequency failed p.returncode= " + str(proc.returncode))
+            raise Exception(
+                "frequency failed p.returncode= " + str(proc.returncode))
     except Exception as inst:
         print("can't run frequency.")
         print(inst)
         exit(1)
 
     try:
-        print("running: ./frequency r < ../input.txt > ../frequency_r_output.txt" )
-        proc = subprocess.Popen("./frequency r < ../input.txt > ../frequency_r_output.txt", shell=True)
+        print("running: ./frequency r < ../input.txt > ../frequency_r_output.txt")
+        proc = subprocess.Popen(
+            "./frequency r < ../input.txt > ../frequency_r_output.txt", shell=True)
         proc.wait()
         if proc.returncode != 0:
-           raise Exception("frequency r failed p.returncode= " + str(proc.returncode))
+            raise Exception(
+                "frequency r failed p.returncode= " + str(proc.returncode))
     except Exception as inst:
         print("can't run frequency r.")
         print(inst)
@@ -109,6 +119,7 @@ def main():
         print("All if good")
     else:
         print("some difference found. please check")
+
 
 if __name__ == "__main__":
     main()
