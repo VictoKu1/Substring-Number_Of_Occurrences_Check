@@ -2,6 +2,7 @@
 #define __FREQUENCY__H
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #define NUM_LETTERS ((int)27)
 typedef enum
 {
