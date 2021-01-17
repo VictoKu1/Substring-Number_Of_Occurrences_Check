@@ -4,24 +4,29 @@ int main(int argc, char *argv[])
 {
     int i, max;
     max = -1;
-    char *w ="w";
+    char *w ;
     node *root = node_builder('.');
-    while (w[0] != EOF)
+    i = 0;
+    while (i >-1)
     {
         w = get_word(&i);
-        if (w[0] != EOF)
+        if (i > -1)
         {
             tree_builder(w, i, root);
             if (i > max)
             {
                 max = i;
             }
-        }
+        } 
         free(w);
     }
-    if (argv[1][0] == 'r')
+    if (argc >= 1)
+    {
+        printf("%i  %s",argc,argv[0]);
+        if (argv[1][0] == 'r')
     {
         Lexicographic_R(root, max);
+    }
     }
     else
     {
@@ -45,12 +50,19 @@ char *get_word(int *i)
     *i = 0;
     int len = 51;
     scanf("%c", &c);
-    while (c != ' ' && c != '\t' && c != '\n' && c != 13)
+    int v = (int)c;
+    printf("c = %i , v = %i\n",c,v);
+    while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13)&&(v > 0))
     {
         if (*i >= len)
         {
+<<<<<<< HEAD
+            len *= 2;
+            word = realloc(word, len * 2);
+=======
             len = len*2 ; 
             word = realloc(word, len);
+>>>>>>> bc77e7e66b47a643882b778bd6edff99343f3921
         }
         if (word == NULL)
         {
@@ -60,6 +72,13 @@ char *get_word(int *i)
         word[*i] = c;
         scanf("%c", &c);
         ++(*i);
+        v = (int)c;
+        printf("c = %i \n",c);
+    }
+    printf("i");
+    if (v >0){
+        *i = -1;
+        return word;
     }
     word[*i] = '\0';
     return word;
@@ -73,7 +92,7 @@ void tree_builder(char *c, int len, node *root)
     node *par = root;
     for (size_t i = 0; i < len; i++)
     {
-        printf("%c", c[i]);
+        printf("%c\n", c[i]);
         index = hash_func(c[i]);
         printf("   %i\n", index);
         if (index != -1)
@@ -119,7 +138,6 @@ node *node_builder(char c)
         exit(-1);
     }
     n->children = _children;
-    printf("%ld\n", (long)_children[0]);
     return n;
 }
 
@@ -140,6 +158,7 @@ int hash_func(int i)
 // reads the tree in a Lexicographic order
 void Lexicographic(node *root, int max)
 {
+    printf("start");
     char w[max];
     for (size_t i = 0; i < NUM_LETTERS; ++i)
     {
@@ -153,6 +172,7 @@ void Lexicographic(node *root, int max)
 // recursive function for tree navigation
 void Lexicographic_func(char *w, node *n, int index)
 {
+    printf("%c",n->letter);
     if (n->letter == '$')
     {
         w[index] = '\0';
