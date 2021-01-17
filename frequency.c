@@ -4,13 +4,15 @@ int main(int argc, char *argv[])
 {
     int i, max;
     max = -1;
-    char *w ;
+    char *w = malloc(1);
     node *root = node_builder('.');
     i = 0;
-    while (i >-1)
+    w[0] = '*';
+    while (w[0] != EOF)
     {
+        free(w);
         w = get_word(&i);
-        if (i > -1)
+        if (w[0] != EOF)
         {
             tree_builder(w, i, root);
             if (i > max)
@@ -18,7 +20,6 @@ int main(int argc, char *argv[])
                 max = i;
             }
         } 
-        free(w);
     }
     if (argc >= 1)
     {
@@ -49,20 +50,14 @@ char *get_word(int *i)
     char c;
     *i = 0;
     int len = 51;
-    scanf("%c", &c);
-    int v = (int)c;
+    c = getchar()
     printf("c = %i , v = %i\n",c,v);
-    while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13)&&(v > 0))
+    while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13)&&(c != EOF))
     {
         if (*i >= len)
         {
-<<<<<<< HEAD
-            len *= 2;
-            word = realloc(word, len * 2);
-=======
             len = len*2 ; 
             word = realloc(word, len);
->>>>>>> bc77e7e66b47a643882b778bd6edff99343f3921
         }
         if (word == NULL)
         {
@@ -70,14 +65,12 @@ char *get_word(int *i)
             exit(-1);
         }
         word[*i] = c;
-        scanf("%c", &c);
+        c = getchar();
         ++(*i);
-        v = (int)c;
         printf("c = %i \n",c);
     }
-    printf("i");
-    if (v >0){
-        *i = -1;
+    if (c ==EOF){
+        word[0] = EOF;
         return word;
     }
     word[*i] = '\0';
