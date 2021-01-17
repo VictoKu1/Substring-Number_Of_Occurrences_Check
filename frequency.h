@@ -19,4 +19,9 @@ char *get_word(int *i);
 void tree_builder(char *c, int len, node *root);
 node *node_builder(char c);
 int hash_func(int i);
+void free_tree(node *_node);
+void Lexicographic(node *root, int max);
+void Lexicographic_func(char *w, node *n, int index);
+void Lexicographic_R(node *root, int max);
+void Lexicographic_R_func(char *w, node *n, int index);
 #endif

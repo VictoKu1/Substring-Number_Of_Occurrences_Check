@@ -6,11 +6,11 @@ int main(int argc, char *argv[])
     max = -1;
     char *w;
     *w = 'w';
-    node *root = node_builder('');
-    while (*w[0] != EOF)
+    node *root = node_builder(' ');
+    while (w[0] != EOF)
     {
         w = get_word(&i);
-        if (*w[0] != EOF)
+        if (w[0] != EOF)
         {
             tree_builder(w, i, root);
             if (i > max)
@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
     {
         Lexicographic(root, max);
     }
-    free_tree(root, max);
+    free_tree(root);
     return 0;
 }
 
@@ -204,14 +204,14 @@ void Lexicographic_R_func(char *w, node *n, int index)
 }
 void free_tree(node *_node)
 {
-    if (_node->letter == '$')
+    if ( _node->letter == '$')
     {
         free(_node);
         return;
     }
     for (size_t i = 0; i < NUM_LETTERS; ++i)
     {
-        if (_node->children[i] != NULL)
+        if ( _node->children[i] != NULL)
         {
             free_tree(_node->children[i]);
         }
