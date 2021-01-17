@@ -38,22 +38,23 @@ char *get_word(int *i)
     char *word = (char *)malloc(sizeof(char) * 51);
     if (word == NULL)
     {
-        printf("not enough memory");
+        printf("not enough memory\n");
         exit(-1);
     }
     char c;
     *i = 0;
-    int len = 50;
+    int len = 51;
     scanf("%c", &c);
     while (c != ' ' && c != '\t' && c != '\n' && c != 13)
     {
         if (*i >= len)
         {
-            word = realloc(word, len * 2);
+            len = len*2 ; 
+            word = realloc(word, len);
         }
         if (word == NULL)
         {
-            printf("not enough memory");
+            printf("not enough memory\n");
             exit(-1);
         }
         word[*i] = c;
@@ -74,7 +75,7 @@ void tree_builder(char *c, int len, node *root)
     {
         printf("%c", c[i]);
         index = hash_func(c[i]);
-        printf("index = %i\n", index);
+        printf("   %i\n", index);
         if (index != -1)
         {
             if (par->children[index] == NULL)
@@ -103,7 +104,7 @@ node *node_builder(char c)
     node *n = (node *)malloc(sizeof(node));
     if (n == NULL)
     {
-        printf("not enough memory");
+        printf("not enough memory\n");
         exit(-1);
     }
     n->count = 0;
@@ -114,7 +115,7 @@ node *node_builder(char c)
     node **_children = (node **)calloc(sizeof(node *), NUM_LETTERS);
     if (_children == NULL)
     {
-        printf("not enough memory");
+        printf("not enough memory\n");
         exit(-1);
     }
     n->children = _children;
@@ -155,7 +156,7 @@ void Lexicographic_func(char *w, node *n, int index)
     if (n->letter == '$')
     {
         w[index] = '\0';
-        printf("%s %ld", w, n->count);
+        printf("%s %ld\n", w, n->count);
         return;
     }
     w[index] = n->letter;
