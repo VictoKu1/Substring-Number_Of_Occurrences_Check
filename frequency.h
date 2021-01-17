@@ -8,14 +8,12 @@ typedef enum
 {
     FALSE = 0,
     TRUE = 1
-} boolean;
-
+} boolean; 
 typedef struct node
 {
     char letter;
     long unsigned int count;
     struct node **children;
-    char *unvisitedNodesAtPrintLoopRunTime;
 } node;
 char *get_word(int *i);
 void tree_builder(char *c, int len, node *root);

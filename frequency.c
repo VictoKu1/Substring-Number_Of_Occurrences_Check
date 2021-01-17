@@ -1,17 +1,34 @@
 #include "frequency.h"
 
-int main()
+int main(int argc, char *argv[])
 {
     int i, max;
     max = -1;
-    char *w = get_word(&i);
-    if (i > max)
+    char *w;
+    *w = 'w';
+    node *root = node_builder('');
+    while (*w[0] != EOF)
     {
-        max = i;
+        w = get_word(&i);
+        if (*w[0] != EOF)
+        {
+            tree_builder(w, i, root);
+            if (i > max)
+            {
+                max = i;
+            }
+        }
+        free(w);
     }
-    printf("%s , %i \n", w, i);
-    node *root = node_builder('.');
-    tree_builder(w, i, root);
+    if (argv[1][0] == 'r')
+    {
+        Lexicographic_R(root, max);
+    }
+    else
+    {
+        Lexicographic(root, max);
+    }
+    free_tree(root, max);
     return 0;
 }
 
@@ -166,7 +183,7 @@ void Lexicographic_R(node *root, int max)
     }
 }
 // recursive function for tree navigation
-void unLexicographic_R_func(char *w, node *n, int index)
+void Lexicographic_R_func(char *w, node *n, int index)
 {
     if (n->letter == '$')
     {
@@ -183,5 +200,24 @@ void unLexicographic_R_func(char *w, node *n, int index)
         }
     }
     w[index] = '\0';
+    return;
+}
+void free_tree(node *_node)
+{
+    if (_node->letter == '$')
+    {
+        free(_node);
+        return;
+    }
+    for (size_t i = 0; i < NUM_LETTERS; ++i)
+    {
+        if (_node->children[i] != NULL)
+        {
+            free_tree(_node->children[i]);
+        }
+        free(_node->children[i]);
+    }
+    free(_node->children);
+    free(_node);
     return;
 }
