@@ -8,7 +8,7 @@ typedef enum
 {
     FALSE = 0,
     TRUE = 1
-} boolean; 
+} boolean;
 typedef struct node
 {
     char letter;
