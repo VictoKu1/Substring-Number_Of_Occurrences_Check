@@ -12,7 +12,7 @@ int main(int argc, char *argv[])
     {
         free(w);
         w = get_word(&i);
-        if (w[0] != EOF)
+        if (w[0] > 96)
         {
             tree_builder(w, i, root);
             if (i > max)
@@ -58,6 +58,10 @@ char *get_word(int *i)
     }
     while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13) && (c != EOF))
     {
+        if (c < 91 && c > 64)
+        {
+            c = c + 32;
+        }
         if (*i >= len)
         {
             len = len * 2;
@@ -68,9 +72,12 @@ char *get_word(int *i)
             printf("not enough memory\n");
             exit(-1);
         }
-        word[*i] = c;
+        if (hash_func(c) >= 0)
+        {
+            word[*i] = c;
+             ++(*i);
+        }
         c = getchar();
-        ++(*i);
     }
     word[*i] = '\0';
     return word;
@@ -152,7 +159,6 @@ int hash_func(int i)
 // reads the tree in a Lexicographic order
 void Lexicographic(node *root, int max)
 {
-    //*  printf("start");
     char w[max];
     for (size_t i = 0; i < NUM_LETTERS; ++i)
     {
@@ -166,7 +172,6 @@ void Lexicographic(node *root, int max)
 // recursive function for tree navigation
 void Lexicographic_func(char *w, node *n, int index)
 {
-    //*  printf("%c", n->letter);
     if (n->letter == '$')
     {
         w[index] = '\0';
