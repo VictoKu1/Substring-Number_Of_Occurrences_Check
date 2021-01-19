@@ -1,49 +1,39 @@
 #include "frequency.h"
 
-int main(int argc, char *argv[])
-{
+int main(int argc, char *argv[]) {
     int i, max;
     max = -1;
     char *w = malloc(1);
     node *root = node_builder('.');
     i = 0;
     w[0] = '*';
-    while (w[0] != EOF)
-    {
+    while (w[0] != EOF) {
         free(w);
         w = get_word(&i);
-        if (w[0] > 96)
-        {
+        if (w[0] > 96) {
             tree_builder(w, i, root);
-            if (i > max)
-            {
+            if (i > max) {
                 max = i;
             }
         }
     }
     free(w);
-    if (argc >= 2)
-    {
-        if (strcmp(argv[1], "r") == 0)
-        {
+    if (argc >= 2) {
+        if (strcmp(argv[1], "r") == 0) {
             Lexicographic_R(root, max);
         }
-    }
-    else
-    {
+    } else {
         Lexicographic(root, max);
     }
     free_tree(root);
     return 0;
 }
 
-// read a word from the user and return the word (update the length of the word with the poiner i)
+//*Read a word from the user and return the word (update the length of the word with the pointer i) .
 
-char *get_word(int *i)
-{
-    char *word = (char *)malloc(sizeof(char) * 51);
-    if (word == NULL)
-    {
+char *get_word(int *i) {
+    char *word = (char *) malloc(sizeof(char) * 51);
+    if (word == NULL) {
         printf("not enough memory\n");
         exit(-1);
     }
@@ -51,31 +41,25 @@ char *get_word(int *i)
     *i = 0;
     int len = 51;
     c = getchar();
-    if (c == EOF)
-    {
+    if (c == EOF) {
         word[0] = EOF;
         return word;
     }
-    while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13) && (c != EOF))
-    {
-        if (c < 91 && c > 64)
-        {
+    while ((c != ' ') && (c != '\t') && (c != '\n') && (c != 13) && (c != EOF)) {
+        if (c < 91 && c > 64) {
             c = c + 32;
         }
-        if (*i >= len)
-        {
+        if (*i >= len) {
             len = len * 2;
             word = realloc(word, len);
         }
-        if (word == NULL)
-        {
+        if (word == NULL) {
             printf("not enough memory\n");
             exit(-1);
         }
-        if (hash_func(c) >= 0)
-        {
+        if (hash_func(c) >= 0) {
             word[*i] = c;
-             ++(*i);
+            ++(*i);
         }
         c = getchar();
     }
@@ -83,58 +67,45 @@ char *get_word(int *i)
     return word;
 }
 
-// given a word build a path for it in the tree ( $ is the end of the word)
-void tree_builder(char *c, int len, node *root)
-{
+//*Given a word build a path for it in the tree ($ is the end of the word) .
+void tree_builder(char *c, int len, node *root) {
     int index;
     node *n;
     node *par = root;
-    for (size_t i = 0; i < len; i++)
-    {
+    for (size_t i = 0; i < len; i++) {
         index = hash_func(c[i]);
-        if (index != -1)
-        {
-            if (par->children[index] == NULL)
-            {
+        if (index != -1) {
+            if (par->children[index] == NULL) {
                 n = node_builder(c[i]);
                 par->children[index] = n;
-            }
-            else
-            {
+            } else {
                 n = par->children[index];
             }
             par = n;
         }
     }
-    if (par->children[0] == NULL)
-    {
+    if (par->children[0] == NULL) {
         n = node_builder('$');
         par->children[0] = n;
     }
     par->children[0]->count += 1;
 }
 
-// build a node that represent the given char
-node *node_builder(char c)
-{
-    node *n = (node *)malloc(sizeof(node));
-    if (n == NULL)
-    {
+//*Build a node that represent the given char .
+node *node_builder(char c) {
+    node *n = (node *) malloc(sizeof(node));
+    if (n == NULL) {
         printf("not enough memory\n");
         exit(-1);
     }
     n->count = 0;
-    if (c != '.')
-    {
+    if (c != '.') {
         n->letter = c;
-    }
-    else
-    {
+    } else {
         n->letter = '.';
     }
-    node **_children = (node **)calloc(sizeof(node *), NUM_LETTERS);
-    if (_children == NULL)
-    {
+    node **_children = (node **) calloc(sizeof(node *), NUM_LETTERS);
+    if (_children == NULL) {
         printf("not enough memory\n");
         exit(-1);
     }
@@ -142,101 +113,82 @@ node *node_builder(char c)
     return n;
 }
 
-// caculate a hash function for the letters
-int hash_func(int i)
-{
-    if (i < 91 && i > 64)
-    {
+//*Calculate a hash function for the letters.
+int hash_func(int i) {
+    if (i < 91 && i > 64) {
         i = i + 32;
     }
-    if (i < 97 || i > 122)
-    {
+    if (i < 97 || i > 122) {
         return -1;
     }
     return i - 96;
 }
 
-// reads the tree in a Lexicographic order
-void Lexicographic(node *root, int max)
-{
+//*Reads the tree in a Lexicographic order.
+void Lexicographic(node *root, int max) {
     char w[max];
-    for (size_t i = 0; i < NUM_LETTERS; ++i)
-    {
-        if (root->children[i] != NULL)
-        {
+    for (size_t i = 0; i < NUM_LETTERS; ++i) {
+        if (root->children[i] != NULL) {
             Lexicographic_func(w, root->children[i], 0);
         }
     }
 }
 
-// recursive function for tree navigation
-void Lexicographic_func(char *w, node *n, int index)
-{
-    if (n->letter == '$')
-    {
+//*Recursive function for tree navigation.
+void Lexicographic_func(char *w, node *n, int index) {
+    if (n->letter == '$') {
         w[index] = '\0';
         printf("%s %ld\n", w, n->count);
         return;
     }
     w[index] = n->letter;
-    for (size_t i = 0; i < NUM_LETTERS; ++i)
-    {
-        if (n->children[i] != NULL)
-        {
+    for (size_t i = 0; i < NUM_LETTERS; ++i) {
+        if (n->children[i] != NULL) {
             Lexicographic_func(w, n->children[i], index + 1);
         }
     }
     w[index] = '\0';
     return;
 }
-// reads the tree in a revese Lexicographic order
-void Lexicographic_R(node *root, int max)
-{
+
+//*Reads the tree in a reverse Lexicographic order .
+void Lexicographic_R(node *root, int max) {
     char w[max];
-    for (int i = NUM_LETTERS - 1; i >= 0; i--)
-    {
-        if (root->children[i] != NULL)
-        {
+    for (int i = NUM_LETTERS - 1; i >= 0; i--) {
+        if (root->children[i] != NULL) {
             Lexicographic_R_func(w, root->children[i], 0);
         }
     }
 }
-// recursive function for tree navigation
-void Lexicographic_R_func(char *w, node *n, int index)
-{
-    if (n->letter == '$')
-    {
+
+//*Recursive function for tree navigation.
+void Lexicographic_R_func(char *w, node *n, int index) {
+    if (n->letter == '$') {
         w[index] = '\0';
         printf("%s %ld\n", w, n->count);
         return;
     }
     w[index] = n->letter;
-    for (int i = NUM_LETTERS - 1; i >=0; --i)
-    {
-        if (n->children[i] != NULL)
-        {
-            Lexicographic_R_func(w, n->children[i], index +1);
+    for (int i = NUM_LETTERS - 1; i >= 0; --i) {
+        if (n->children[i] != NULL) {
+            Lexicographic_R_func(w, n->children[i], index + 1);
         }
     }
     w[index] = '\0';
     return;
 }
-void free_tree(node *_node)
-{
-    if (_node == NULL)
-    {
+//*Passes recursively on all over the tree and frees the allocations which were made on previous steps.
+void free_tree(node *_node) {
+    if (_node == NULL) {
         return;
     }
-    if (_node->letter == '$')
-    {
+    if (_node->letter == '$') {
         free(_node->children);
         free(_node);
         return;
     }
-    for (size_t i = 0; i < NUM_LETTERS; ++i)
-    {
-        if (_node->children[i] != NULL)
-        {
+    for (size_t i = 0; i < NUM_LETTERS; ++i) {
+        if (_node->children[i] != NULL) {
             free_tree(_node->children[i]);
         }
         //*      free(_node->children[i]);

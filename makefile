@@ -1,16 +1,11 @@
-all : frequency
+all : frequency frequency.o
 
 frequency : frequency.o
 	gcc -g -Wall frequency.o -o frequency
 
-frequency.o : frequency.c
-	gcc -g -Wall  -c frequency.c -o frequency.o
+frequency.o : frequency.c frequency.h
+	gcc -g -Wall -c frequency.c frequency.h
 
-.PHONY : all clean
-
+.PHONY : clean all
 clean :
-	rm frequency *.o 
-
-
-
-
+	rm -f frequency *.o *.gch
